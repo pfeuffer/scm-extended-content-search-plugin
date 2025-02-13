@@ -1,6 +1,7 @@
 package de.pfeufferweb.scm.ecs;
 
 import com.google.common.io.Resources;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -11,12 +12,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TikaFileContentExtractorTest {
 
   @Mock
   private PluginLoader pluginLoader;
+
+  @BeforeEach
+  void initClassLoader() {
+    when(pluginLoader.getUberClassLoader()).thenReturn(TikaFileContentExtractor.class.getClassLoader());
+  }
 
   @Test
   void shouldConvertPdf() throws IOException {

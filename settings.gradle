@@ -22,5 +22,5 @@
  * SOFTWARE.
  */
 
-includeBuild("../scm-content-search-plugin")
+includeBuild("/home/rene/development/cloudogu/scm-content-search-plugin")
 rootProject.name = 'scm-extended-content-search-plugin'

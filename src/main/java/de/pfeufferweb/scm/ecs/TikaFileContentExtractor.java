@@ -26,6 +26,8 @@ package de.pfeufferweb.scm.ecs;
 
 import com.cloudogu.scm.search.FileContentExtractor;
 import org.apache.tika.Tika;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.metadata.TikaCoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.io.ContentType;
@@ -55,17 +57,18 @@ public class TikaFileContentExtractor implements FileContentExtractor {
   @Override
   public String extractText(InputStream content) {
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+//    Thread.currentThread().setContextClassLoader(uberClassLoader);
     try {
-      Thread.currentThread().setContextClassLoader(uberClassLoader);
       try {
-        String s = new Tika().parseToString(content);
+        System.out.println(TikaCoreProperties.SUBJECT);
+        String s = new Tika(new TikaConfig(uberClassLoader)).parseToString(content);
         return s;
-      } finally {
-        Thread.currentThread().setContextClassLoader(contextClassLoader);
+      } catch (Exception e) {
+        LOG.error("Failed parsing file content", e);
+        return "";
       }
-    } catch (Exception e) {
-      LOG.error("Failed parsing file content", e);
-      return "";
+    } finally {
+      Thread.currentThread().setContextClassLoader(contextClassLoader);
     }
   }
 }
